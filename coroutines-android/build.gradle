@@ -1,0 +1,38 @@
+group 'ru.gildor.coroutines.android'
+version '0.1'
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 25
+        versionCode 1
+        versionName project.version
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        targetCompatibility = '1.6'
+        sourceCompatibility = '1.6'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin_version"
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.6-beta'
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

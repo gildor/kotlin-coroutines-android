@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Android Coroutines</string>
+    <string name="cancel">Cancel</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="load">Load</string>
+</resources>
