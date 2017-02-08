@@ -2,9 +2,8 @@ package ru.gildor.coroutines.android
 
 import android.os.Handler
 import android.os.Looper
-import kotlinx.coroutines.experimental.CancellableContinuation
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.Delay
+import kotlinx.coroutines.experimental.*
+import ru.gildor.coroutines.android.Event.Destroy
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.experimental.CoroutineContext
 
@@ -22,4 +21,24 @@ object MainThread : CoroutineDispatcher(), Delay {
         handler.postDelayed(runnable, unit.toMillis(time))
         continuation.onCompletion { handler.removeCallbacks(runnable) }
     }
+}
+
+
+fun CoroutineLifecycle.async(
+        cancelEvent: Event = Destroy,
+        context: CoroutineContext? = null,
+        block: suspend CoroutineScope.() -> Unit
+): Job {
+    if (isEventSupported(cancelEvent)) {
+        throw IllegalStateException("Cancel event $cancelEvent doesn't supported by CoroutineLifecycle $this")
+    }
+    val job = launch(if (context == null) MainThread else context + MainThread) {
+        block(this)
+    }
+    val listener: () -> Unit = {
+        job.cancel()
+    }
+    job.onCompletion { removeListener(listener) }
+    addListener(Destroy, listener)
+    return job
 }

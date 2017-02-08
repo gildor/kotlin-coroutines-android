@@ -6,15 +6,17 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.gildor.coroutines.android.MainThread
+import ru.gildor.coroutines.android.CoroutineLifecycle
+import ru.gildor.coroutines.android.CoroutineLifecycleImpl
+import ru.gildor.coroutines.android.Event
+import ru.gildor.coroutines.android.async
 import ru.gildor.coroutines.retrofit.HttpException
 import ru.gildor.coroutines.retrofit.await
 import ru.gildor.sample.R
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineLifecycle by CoroutineLifecycleImpl() {
 
     private var job: Job? = null
     private var paused = false
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadCommits() {
-        job = launch(MainThread) {
+        job = async {
             progress.visibility = View.VISIBLE
             log("Request repos")
             try {
@@ -74,10 +76,20 @@ class MainActivity : AppCompatActivity() {
         logs.append(message + "\n")
     }
 
+    override fun onPause() {
+        super.onPause()
+        sendEvent(Event.Pause)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sendEvent(Event.Stop)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        //We must cancel job here, otherwise Activity will leak
-        job?.cancel()
+        sendEvent(Event.Destroy)
     }
+
 }
 
