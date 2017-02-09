@@ -4,8 +4,6 @@ Experimental implementation of [Kotlin Coroutines](https://github.com/Kotlin/kot
 ## coroutines-android
 Provides MainThread coroutine context to dispatch coroutine invocation in main thread
 
-Now you must handle activity onStop/onDestroy callbacks manually, to avoid memory leaks.
-
 [README](coroutines-android/README.md)
 
 ## coroutines-retrofit
