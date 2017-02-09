@@ -1,22 +1,21 @@
 package ru.gildor.coroutines.android.sample
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.gildor.coroutines.android.CoroutineLifecycle
-import ru.gildor.coroutines.android.CoroutineLifecycleImpl
-import ru.gildor.coroutines.android.Event
-import ru.gildor.coroutines.android.async
-import ru.gildor.coroutines.retrofit.HttpException
+import ru.gildor.coroutines.android.activity.CoroutineAppCompatActivity
+import ru.gildor.coroutines.android.mainAsync
+import ru.gildor.coroutines.retrofit.HttpError
 import ru.gildor.coroutines.retrofit.await
+import ru.gildor.coroutines.retrofit.awaitResult
+import ru.gildor.coroutines.retrofit.getOrDefault
 import ru.gildor.sample.R
 
-class MainActivity : AppCompatActivity(), CoroutineLifecycle by CoroutineLifecycleImpl() {
+class MainActivity : CoroutineAppCompatActivity() {
 
     private var job: Job? = null
     private var paused = false
@@ -51,11 +50,11 @@ class MainActivity : AppCompatActivity(), CoroutineLifecycle by CoroutineLifecyc
     }
 
     private fun loadCommits() {
-        job = async {
+        job = mainAsync {
             progress.visibility = View.VISIBLE
             log("Request repos")
             try {
-                val repos = github.repositories("kotlin").await()
+                val repos = github.repositories("kotlin").awaitResult().getOrDefault(emptyList())
                 log("Load repositories last commit")
                 for ((name, owner) in repos) {
                     while (paused) delay(100)
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity(), CoroutineLifecycle by CoroutineLifecyc
                     log("[$name] ${lastCommit.author.name}\n${lastCommit.message}")
                     delay(1000)
                 }
-            } catch (e: HttpException) {
+            } catch (e: HttpError) {
                 log("Loading exception: ${e.message}")
                 cancel.setText(R.string.load)
             }
@@ -74,21 +73,6 @@ class MainActivity : AppCompatActivity(), CoroutineLifecycle by CoroutineLifecyc
 
     private fun log(message: String) {
         logs.append(message + "\n")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sendEvent(Event.Pause)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        sendEvent(Event.Stop)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        sendEvent(Event.Destroy)
     }
 
 }

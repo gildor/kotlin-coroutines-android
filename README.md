@@ -6,12 +6,12 @@ Provides MainThread coroutine context to dispatch coroutine invocation in main t
 
 Now you must handle activity onStop/onDestroy callbacks manually, to avoid memory leaks.
 
-TODO: Provide automatic Activity life-cycle management
+[README](coroutines-android/README.md)
 
 ## coroutines-retrofit
 Suspendable await extension for [Retrofit](https://github.com/square/retrofit) callbacks class [Call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html)
 
-TODO: Additional extension functions awaitOrNull() and awaitOrDefault()
+[README](coroutines-retrofit/README.md)
 
 ## How to use
 [Sample of usage](sample/src/main/kotlin/ru/gildor/coroutines/android/sample/MainActivity.kt)

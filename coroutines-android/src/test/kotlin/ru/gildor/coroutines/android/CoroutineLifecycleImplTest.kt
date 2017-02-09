@@ -94,7 +94,7 @@ class CoroutineLifecycleTest {
     }
 
     private fun testListener(test: CoroutineLifecycle.() -> Unit) {
-        CoroutineLifecycleImpl().apply {
+        SynchronizedCoroutineLifecycle().apply {
             test(this)
         }
     }

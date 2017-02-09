@@ -23,8 +23,12 @@ object MainThread : CoroutineDispatcher(), Delay {
     }
 }
 
-
-fun CoroutineLifecycle.async(
+/**
+ * Starts coroutine with [MainThread] dispatcher that will be canceled  after [cancelEvent] of [CoroutineLifecycle]
+ *
+ * By default [cancelEvent]
+ */
+fun CoroutineLifecycle.mainAsync(
         cancelEvent: Event = Destroy,
         context: CoroutineContext? = null,
         block: suspend CoroutineScope.() -> Unit
