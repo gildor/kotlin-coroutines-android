@@ -70,7 +70,7 @@ object MainThread : CoroutineDispatcher(), Delay {
  */
 fun CoroutineLifecycle.mainAsync(
         cancelEvent: Event = Destroy,
-        context: CoroutineContext? = null,
+        context: CoroutineContext? = null, // Using EmptyCoroutineContext by default here will safe an `if` below
         block: suspend CoroutineScope.() -> Unit
 ): Job {
     if (isEventSupported(cancelEvent)) {
