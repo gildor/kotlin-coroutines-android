@@ -1,9 +1,9 @@
-package ru.gildor.coroutines.android.fragment
+package ru.gildor.coroutines.android.lifecycle.fragment
 
 import android.app.Fragment
-import ru.gildor.coroutines.android.CoroutineLifecycle
-import ru.gildor.coroutines.android.Event
-import ru.gildor.coroutines.android.createLifecycle
+import ru.gildor.coroutines.android.lifecycle.CoroutineLifecycle
+import ru.gildor.coroutines.android.lifecycle.Event
+import ru.gildor.coroutines.android.lifecycle.createLifecycle
 
 open class CoroutineFragment : Fragment(), CoroutineLifecycle by createLifecycle() {
     override fun onPause() {

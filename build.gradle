@@ -2,7 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.1.0-beta-38'
-    ext.kotlin_coroutines_version = '0.7-beta'
+    ext.kotlin_coroutines_version = '0.8-beta'
     repositories {
         jcenter()
         maven {

@@ -2,7 +2,10 @@ package ru.gildor.coroutines.android
 
 import org.junit.Assert.*
 import org.junit.Test
-import ru.gildor.coroutines.android.Event.*
+import ru.gildor.coroutines.android.lifecycle.CoroutineLifecycle
+import ru.gildor.coroutines.android.lifecycle.Event.*
+import ru.gildor.coroutines.android.lifecycle.Listener
+import ru.gildor.coroutines.android.lifecycle.SynchronizedCoroutineLifecycle
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread

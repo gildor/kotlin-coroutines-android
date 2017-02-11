@@ -1,4 +1,4 @@
-package ru.gildor.coroutines.android
+package ru.gildor.coroutines.android.lifecycle
 
 typealias Listener = () -> Unit
 

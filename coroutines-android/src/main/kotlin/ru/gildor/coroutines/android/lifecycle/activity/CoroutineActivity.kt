@@ -1,9 +1,9 @@
-package ru.gildor.coroutines.android.activity
+package ru.gildor.coroutines.android.lifecycle.activity
 
 import android.app.Activity
-import ru.gildor.coroutines.android.CoroutineLifecycle
-import ru.gildor.coroutines.android.Event
-import ru.gildor.coroutines.android.createLifecycle
+import ru.gildor.coroutines.android.lifecycle.CoroutineLifecycle
+import ru.gildor.coroutines.android.lifecycle.Event
+import ru.gildor.coroutines.android.lifecycle.createLifecycle
 
 open class CoroutineActivity : Activity(), CoroutineLifecycle by createLifecycle() {
     override fun onPause() {

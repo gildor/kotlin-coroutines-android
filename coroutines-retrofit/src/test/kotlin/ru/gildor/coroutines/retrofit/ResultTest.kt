@@ -11,6 +11,7 @@ class ResultTest {
     private val ok = Result.Ok(result, okHttpResponse())
     private val error = Result.Error<String>(HttpError(errorResponse()), okHttpResponse(401))
     private val exception = Result.Exception<String>(IllegalArgumentException())
+
     @Test
     fun getOrNull() {
         assertEquals(result, ok.getOrNull())

@@ -7,8 +7,8 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.gildor.coroutines.android.activity.CoroutineAppCompatActivity
-import ru.gildor.coroutines.android.mainAsync
+import ru.gildor.coroutines.android.lifecycle.activity.CoroutineAppCompatActivity
+import ru.gildor.coroutines.android.lifecycle.mainAsync
 import ru.gildor.coroutines.retrofit.HttpError
 import ru.gildor.coroutines.retrofit.await
 import ru.gildor.coroutines.retrofit.awaitResult
