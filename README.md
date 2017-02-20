@@ -6,10 +6,5 @@ Provides MainThread coroutine context to dispatch coroutine invocation in main t
 
 [README](coroutines-android/README.md)
 
-## coroutines-retrofit
-Suspendable await extension for [Retrofit](https://github.com/square/retrofit) callbacks class [Call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html)
-
-[README](coroutines-retrofit/README.md)
-
 ## How to use
 [Sample of usage](sample/src/main/kotlin/ru/gildor/coroutines/android/sample/MainActivity.kt)

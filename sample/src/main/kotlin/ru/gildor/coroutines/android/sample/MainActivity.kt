@@ -7,8 +7,8 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.gildor.coroutines.android.lifecycle.activity.CoroutineAppCompatActivity
-import ru.gildor.coroutines.android.lifecycle.mainAsync
+import ru.gildor.coroutines.android.appcompat.activity.CoroutineAppCompatActivity
+import ru.gildor.coroutines.android.lifecycle.asyncMain
 import ru.gildor.coroutines.retrofit.HttpError
 import ru.gildor.coroutines.retrofit.await
 import ru.gildor.coroutines.retrofit.awaitResult
@@ -20,7 +20,7 @@ class MainActivity : CoroutineAppCompatActivity() {
     private var job: Job? = null
     private var paused = false
 
-    private val github by lazy {
+    val github by lazy {
         val retrofit = Retrofit.Builder()
                 .baseUrl("https://api.github.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -50,7 +50,7 @@ class MainActivity : CoroutineAppCompatActivity() {
     }
 
     private fun loadCommits() {
-        job = mainAsync {
+        job = asyncMain {
             progress.visibility = View.VISIBLE
             log("Request repos")
             try {

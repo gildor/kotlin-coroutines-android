@@ -10,4 +10,7 @@ that must be called only from Android main thread
 ## Android lifecycle integration
 TODO: add description and code samples
 
-[Sample of usage](../sample/src/main/kotlin/ru/gildor/coroutines/android/sample/MainActivity.kt)
+## How to use
+
+
+[You can also check sample](../sample/src/main/kotlin/ru/gildor/coroutines/android/sample/MainActivity.kt)

@@ -58,8 +58,10 @@ object MainThread : CoroutineDispatcher(), Delay {
             ```
         */
 
-        val runnable = Runnable { continuation.resume(Unit) }
-        /*
+        val runnable = Runnable {
+            with(continuation) { resumeUndispatched(Unit) }
+        }
+        /*v
             Because `isDispatchNeeded` is not overriden anymore, this `continuation.resume(Unit)` line
             causes an extra dispatch. Upcoming version of `kotlinx.coroutines` (version 0.9) introduces
             a new primitive to enable efficient implementation of such dispatched. The line above will
@@ -69,8 +71,13 @@ object MainThread : CoroutineDispatcher(), Delay {
                 with(continuation) { resumeUndispatched(Unit) }
             }
             ```
+
+            original code:
+            ```
+            val runnable = Runnable { continuation.resume(Unit) }
+            ```
         */
         handler.postDelayed(runnable, unit.toMillis(time))
-        continuation.onCompletion { handler.removeCallbacks(runnable) }
+        continuation.invokeOnCompletion { handler.removeCallbacks(runnable) }
     }
 }

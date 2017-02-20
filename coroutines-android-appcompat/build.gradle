@@ -24,3 +24,7 @@ android {
     }
 }
 
+dependencies {
+    compile project(':coroutines-android')
+    compile 'com.android.support:appcompat-v7:25.1.1'
+}

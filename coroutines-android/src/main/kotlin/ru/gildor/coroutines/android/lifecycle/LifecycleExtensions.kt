@@ -1,33 +1,68 @@
 package ru.gildor.coroutines.android.lifecycle
 
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.*
 import ru.gildor.coroutines.android.dispatcher.MainThread
+import ru.gildor.coroutines.android.lifecycle.Event.Destroy
+import kotlin.coroutines.experimental.AbstractCoroutineContextElement
 import kotlin.coroutines.experimental.CoroutineContext
-import kotlin.coroutines.experimental.EmptyCoroutineContext
 
 /**
  * Starts coroutine with [MainThread] dispatcher that will be canceled  after [cancelEvent] of [CoroutineLifecycle]
  *
  * By default [cancelEvent]
  */
-fun CoroutineLifecycle.mainAsync(
-        cancelEvent: Event = Event.Destroy,
-        context: CoroutineContext = EmptyCoroutineContext,
+fun CoroutineLifecycle.launchLife(
+        context: CoroutineContext,
+        start: Boolean = true,
         block: suspend CoroutineScope.() -> Unit
 ): Job {
-    if (!isEventSupported(cancelEvent)) {
-        throw IllegalStateException("Cancel event $cancelEvent doesn't supported by CoroutineLifecycle $this")
+    return launch(context + LifecycleJob(this, context), start) {
+        block()
     }
-    // Add MainThread dispatcher to context,
-    // even if context contains dispatcher we will replace it
-    val job = launch(context + MainThread) {
-        block(this)
+}
+
+fun <T> CoroutineLifecycle.asyncLife(
+        context: CoroutineContext,
+        start: Boolean = true,
+        block: suspend CoroutineScope.() -> T
+): Deferred<T> {
+    return async(context + LifecycleJob(this, context), start) {
+        block()
     }
-    // Lifecycle cancel listener
-    val listener: Listener = { job.cancel() }
-    addListener(Event.Destroy, listener)
-    job.onCompletion { removeListener(listener) }
-    return job
+}
+
+/**
+ * Lifecycle-aware version of [run]
+ *
+ * You can use [run]
+ */
+suspend fun <T> CoroutineLifecycle.runLife(
+        context: CoroutineContext,
+        block: suspend CoroutineScope.() -> T
+): T {
+    return run(context + LifecycleJob(this, context)) {
+        block()
+    }
+}
+
+open class CancelEvent(val event: Event) : AbstractCoroutineContextElement(CancelEvent) {
+    companion object Key : CoroutineContext.Key<CancelEvent>
+    override fun toString(): String = "CancelOn($event)"
+}
+
+class LifecycleJob(
+        lifecycle: CoroutineLifecycle,
+        context: CoroutineContext? = null,
+        cancelOn: Event = context?.get(CancelEvent)?.event ?: Destroy,
+        val job: Job = context?.get(Job) ?: Job()
+) : Job by job {
+    init {
+        if (!lifecycle.isEventSupported(cancelOn)) {
+            throw IllegalStateException("Cancel event $cancelOn doesn't supported by CoroutineLifecycle ${this}")
+        }
+
+        val listener: Listener = { job.cancel() }
+        lifecycle.addListener(cancelOn, listener)
+        job.invokeOnCompletion { lifecycle.removeListener(listener) }
+    }
 }
