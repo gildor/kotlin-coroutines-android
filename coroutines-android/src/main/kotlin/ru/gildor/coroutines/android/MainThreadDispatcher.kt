@@ -59,7 +59,7 @@ object MainThread : CoroutineDispatcher(), Delay {
 
 */
         handler.postDelayed(runnable, unit.toMillis(time))
-        continuation.onCompletion { handler.removeCallbacks(runnable) }
+        continuation.invokeOnCompletion { handler.removeCallbacks(runnable) }
     }
 }
 
@@ -73,7 +73,7 @@ fun CoroutineLifecycle.mainAsync(
         context: CoroutineContext? = null, // Using EmptyCoroutineContext by default here will safe an `if` below
         block: suspend CoroutineScope.() -> Unit
 ): Job {
-    if (isEventSupported(cancelEvent)) {
+    if (!isEventSupported(cancelEvent)) {
         throw IllegalStateException("Cancel event $cancelEvent doesn't supported by CoroutineLifecycle $this")
     }
     val job = launch(if (context == null) MainThread else context + MainThread) {
@@ -82,7 +82,7 @@ fun CoroutineLifecycle.mainAsync(
     val listener: () -> Unit = {
         job.cancel()
     }
-    job.onCompletion { removeListener(listener) }
+    job.invokeOnCompletion { removeListener(listener) }
     addListener(Destroy, listener)
     return job
 }
