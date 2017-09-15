@@ -73,7 +73,7 @@ fun CoroutineLifecycle.mainAsync(
         context: CoroutineContext? = null, // Using EmptyCoroutineContext by default here will safe an `if` below
         block: suspend CoroutineScope.() -> Unit
 ): Job {
-    if (isEventSupported(cancelEvent)) {
+    if (!isEventSupported(cancelEvent)) {
         throw IllegalStateException("Cancel event $cancelEvent doesn't supported by CoroutineLifecycle $this")
     }
     val job = launch(if (context == null) MainThread else context + MainThread) {
