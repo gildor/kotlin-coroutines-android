@@ -59,7 +59,7 @@ object MainThread : CoroutineDispatcher(), Delay {
 
 */
         handler.postDelayed(runnable, unit.toMillis(time))
-        continuation.onCompletion { handler.removeCallbacks(runnable) }
+        continuation.invokeOnCompletion { handler.removeCallbacks(runnable) }
     }
 }
 
@@ -82,7 +82,7 @@ fun CoroutineLifecycle.mainAsync(
     val listener: () -> Unit = {
         job.cancel()
     }
-    job.onCompletion { removeListener(listener) }
+    job.invokeOnCompletion { removeListener(listener) }
     addListener(Destroy, listener)
     return job
 }

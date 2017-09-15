@@ -28,7 +28,6 @@ suspend fun <T> Call<T>.await(): T {
                 continuation.resumeWithException(t)
             }
         })
-
         registerOnCompletion(continuation)
     }
 }
@@ -58,7 +57,7 @@ suspend fun <T> Call<T>.awaitResult(): Result<T> {
 }
 
 private fun Call<*>.registerOnCompletion(continuation: CancellableContinuation<*>) {
-    continuation.onCompletion {
+    continuation.invokeOnCompletion {
         if (continuation.isCancelled)
             try {
                 cancel()
